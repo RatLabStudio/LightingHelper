@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<style>
+	body {
+		text-align: center;
+		font-family: sans-serif;
+		background-color: black;
+		color: aliceblue;
+	}
+
+	canvas {
+		background-color: rgb(27, 27, 27);
+		border-style: solid;
+		border-color: aliceblue;
+		border-width: 1px;
+		border-radius: 10px;
+	}
+
+	button {
+		width: 150px;
+		height: 50px;
+		font-size: 28px;
+		font-weight: bold;
+		border-radius: 10px;
+		border-width: 0px;
+		background-color: lightskyblue;
+	}
+
+	button:hover {
+		filter: brightness(150%);
+	}
+
+	input {
+		text-align: left;
+		font-size: 20px;
+		width: 91%;
+		position: absolute;
+		bottom: 20px;
+		left: 20px;
+		background-color: rgb(27, 27, 27);
+		color: white;
+	}
+
+	.popup {
+		background-color: rgb(59, 59, 59);
+		color: white;
+		padding: 5px;
+		border-radius: 10px;
+		border-width: 5px;
+		border-style: solid;
+		border-color: rgb(45, 255, 0);
+		position: fixed;
+		width: 500px;
+		height: 500px;
+		top: 40%;
+		left: 50%;
+		margin-top: -250px;
+		margin-left: -250px;
+		z-index: 9;
+	}
+
+	.popup button {
+		width: 150px;
+		height: 50px;
+		font-size: 18px;
+		font-weight: bold;
+		border-radius: 10px;
+		border-width: 0px;
+		background-color: rgb(36, 197, 0);
+		color: black;
+	}
+
+	.colors {
+		background-color: rgb(82, 82, 82);
+		padding: 9px;
+		margin: 4px;
+		text-align: left;
+		border-radius: 10px;
+	}
+
+	.colors button {
+		width: 75px;
+		height: 75px;
+		background-color: rgb(52, 52, 52);
+		color: white;
+		font-size: 14px;
+		font-weight: normal;
+		border-radius: 5px;
+		border-width: 5px;
+		border-style: solid;
+		border-color: rgb(123, 123, 123);
+		margin-bottom: 5px;
+	}
+
+	.basicInput {
+		position: unset;
+		font-size: 16px;
+		background-color: rgb(41, 41, 41);
+		width: 100px;
+	}
+
+	#exitButton {
+		font-size: 10px;
+		font-weight: bold;
+		padding: 4px;
+		margin: 10px;
+		width: 20px;
+		height: 20px;
+		background-color: tomato;
+		position: absolute;
+		top: 5px;
+		right: 5px;
+	}
+
+	#dockButton {
+		font-size: 10px;
+		font-weight: bold;
+		padding: 4px;
+		margin: 10px;
+		width: 20px;
+		height: 20px;
+		background-color: aqua;
+		position: absolute;
+		top: 5px;
+		left: 5px;
+	}
+
+	.groups {
+		background-color: rgb(82, 82, 82);
+		padding: 9px;
+		margin: 4px;
+		text-align: left;
+		border-radius: 10px;
+	}
+
+	.groups button {
+		width: 75px;
+		height: 75px;
+		background-color: rgb(52, 52, 52);
+		color: white;
+		font-size: 14px;
+		font-weight: normal;
+		border-radius: 5px;
+		border-width: 5px;
+		border-style: solid;
+		border-color: rgb(123, 123, 123);
+		margin-bottom: 5px;
+		margin-right: 2px;
+		margin-left: 2px;
+	}
+
+	.infoBox {
+		font-size: 20px;
+		margin: 5px;
+		width: 50%;
+	}
+
+	select {
+		font-size: 14px;
+		background-color: rgb(41, 41, 41);
+		color: white;
+		appearance: none;
+		border-width: 0px;
+		border-radius: 0px;
+		width: 100px;
+		height: 23px;
+	}
+
+	.header {
+		background-color: rgb(91, 91, 91);
+		margin-bottom: 16px;
+		padding-top: 5px;
+		padding-bottom: 15px;
+	}
+
+	.header h1 {
+		font-size: 32px;
+		color: black;
+		margin-top: 2px;
+		margin-bottom: 2px;
+	}
+
+	.header a {
+		text-decoration: none;
+		color: black;
+	}
+
+	.popup table {
+		text-align: center;
+		margin: auto;
+		background-color: rgb(44, 44, 44);
+	}
+
+	.popup th {
+		background-color: rgb(42, 42, 42);
+		padding: 10px;
+	}
+
+	.popup td {
+		background-color: rgb(44, 44, 44);
+		padding: 2px;
+	}
+
+	.smallInput {
+		width: 70px;
+	}
+</style>
+
+<head>
+	<title>DMX Simulator</title>
+	<link rel="icon" href="https://ratlab.one/wp-content/uploads/2022/09/icon.png">
+</head>
+
+<body>
+	<div class="header">
+		<h1 style="float: left; margin-left: 10%;"><a href="https://ratlab.one">Rat Lab</a></h1>
+		<h1 style="float: right; margin-right: 10%;">DMX Lighting Simulator</h1>
+		<br><br>
+    </div>
+    <br>
+    <canvas id="canvas" width="720" height="480"></canvas>
+    <br><br>
+
+    <!-- Effect Menu -->
+    <div class="popup" id="effects" style="display: none;">
+        <h2>Effects Menu</h2>
+        <button id="dockButton" onclick="dockPopup('effects')">[]</button>
+        <button id="exitButton" onclick="togglePopup('effects')">X</button>
+        <br>
+        <button onclick="togglePopup('lightGroups')">Select Light Group</button>
+        <br>
+        <input type="text" class="basicInput infoBox selectedLightGroup">
+        <br>
+        <h2>Effect</h2>
+        <select id="effectName">
+            <option value="sawtooth">Sawtooth</option>
+            <option value="bounce">Bounce</option>
+        </select>
+        <input id="effectSpeed" class="basicInput" placeholder="Speed" style="width: 75px;">
+        <select id="effectDirection">
+            <option value="forward">Forward</option>
+            <option value="reverse">Reverse</option>
+        </select>
+        <input id="effectColumn" class="basicInput" placeholder="Start" style="width: 75px;">
+        <br><br>
+        <button id="enter" onclick="effectEnter()" style="height: 30px;">Enter</button>
+        <br><br><br>
+        <button id="clearEffects" onclick="togglePopup('activeEffects')" style="background-color: lightskyblue;">Active Effects</button>
+        <input type="text" id="effectConsole">
+    </div>
+
+    <!-- Active Effects Menu -->
+    <div class="popup" id="activeEffects" style="display: none;">
+        <h2>Active Effects</h2>
+        <button id="dockButton" onclick="dockPopup('activeEffects')">[]</button>
+        <button id="exitButton" onclick="togglePopup('activeEffects')">X</button>
+        <table id="effectList">
+            <th>Fixture</th>
+            <th>Name</th>
+            <th>Speed</th>
+            <th>Direction</th>
+            <th>Position</th>
+            <th>Start</th>
+        </table>
+        <br>
+        <button id="applyEffects" onclick="applyEffects()" style="background-color: lightskyblue;">Apply Edits</button>
+        <button id="clearEffects" onclick="clearEffects()" style="background-color: tomato;">Clear all Effects</button>
+        <input type="text" id="activeEffectsConsole">
+    </div>
+
+    <!-- Fixtures Menu -->
+    <div class="popup" id="fixtures" style="display: none;">
+        <h2>Fixtures</h2>
+        <button id="dockButton" onclick="dockPopup('fixtures')">[]</button>
+        <button id="exitButton" onclick="togglePopup('fixtures')">X</button>
+        <button onclick="togglePopup('lightGroups')">Select Light Group</button>
+        <br>
+        <input type="text" class="basicInput infoBox selectedLightGroup">
+        <br><br><br>
+        <button onclick="togglePopup('colorsPopup')">Select Color</button>
+        <br>
+        <input type="text" class="basicInput infoBox selectedColor">
+        <br>
+        <input type="text" id="fixtureBrightness" class="basicInput" placeholder="Brightness">
+        <br><br><br>
+        <button id="enter" onclick="fixtureEnter()" style="height: 30px;">Enter</button>
+        <input type="text" id="fixtureConsole">
+    </div>
+
+    <!-- Color Menu -->
+    <div class="popup" id="colorsPopup" style="display: none;">
+        <h2>Color Menu</h2>
+        <button id="dockButton" onclick="dockPopup('colorsPopup')">[]</button>
+        <button id="exitButton" onclick="togglePopup('colorsPopup')">X</button>
+        <div class="colors">
+            <button class="colorButton" id="255,0,0" style="border-color: rgb(255,0,0);">Red</button>
+            <button class="colorButton" id="255,165,0" style="border-color: rgb(255, 165, 0);">Orange</button>
+            <button class="colorButton" id="255,255,0" style="border-color: yellow;">Yellow</button>
+            <button class="colorButton" id="0,255,0" style="border-color: lime;">Lime</button>
+            <button class="colorButton" id="0,255,255" style="border-color: aqua;">Aqua</button>
+            <button class="colorButton" id="128,0,128" style="border-color: purple;">Purple</button>
+            <button class="colorButton" id="255,192,203" style="border-color: pink;">Pink</button>
+            <button class="colorButton" id="255,99,71" style="border-color: tomato;">Tomato</button>
+            <button class="colorButton" id="255,255,255" style="border-color: rgb(123,123,123);">Empty</button>
+            <button class="colorButton" id="0,128,0" style="border-color: green;">Green</button>
+            <button class="colorButton" id="0,0,255" style="border-color: blue;">Blue</button>
+            <button class="colorButton" id="255,255,255" style="border-color: rgb(123,123,123);">Empty</button>
+            <button class="colorButton" id="255,255,255" style="border-color: rgb(123,123,123);">Empty</button>
+            <button class="colorButton" id="255,255,255" style="border-color: rgb(123,123,123);">Empty</button>
+            <button class="colorButton" id="255,255,255" style="border-color: rgb(123,123,123);">Empty</button>
+            <button class="colorButton" id="255,255,255" style="border-color: rgb(123,123,123);">Empty</button>
+            <button class="colorButton" id="255,255,255" style="border-color: rgb(123,123,123);">Empty</button>
+            <button class="colorButton" id="255,255,255" style="border-color: rgb(123,123,123);">Empty</button>
+        </div>
+        <input type="text" id="colorConsole">
+    </div>
+
+    <!-- Group Menu -->
+    <div class="popup" id="lightGroups" style="display: none;">
+        <h2>Light Groups Menu</h2>
+        <button id="dockButton" onclick="dockPopup('lightGroups')">[]</button>
+        <button id="exitButton" onclick="togglePopup('lightGroups')">X</button>
+        <div id="groupList" class="groups">
+        </div>
+        <input type="text" id="groupsConsole">
+    </div>
+
+    <!-- Help Menu -->
+    <div class="popup" id="help" style="display: none;">
+        <h2>Help</h2>
+        <button id="dockButton" onclick="dockPopup('help')">[]</button>
+        <button id="exitButton" onclick="togglePopup('help')">X</button>
+        <div style="text-align: left; margin: 20px; background-color: rgb(68, 68, 68); padding: 1px 20px 1px 20px; border-radius: 5px;">
+            <h3 style="color: aqua; margin-bottom: 2px;">General Use</h3>
+            <p>This site operates with panels, which can be opened by their respective buttons.
+                All the panels share data, so you can open them all at once and work efficiently.
+            </p>
+            <h3 style="color: aqua; margin-bottom: 2px;">Fixtures</h3>
+            <p>A fixture is a light that can change it's color and brightness, and they have a 
+                pulse function for effect usage. The lights arent typically modified individually.
+            </p>
+            <h3 style="color: aqua; margin-bottom: 2px;">Light Groups</h3>
+            <p>These are groups of lights that can be modified together with effects or colors
+            </p>
+            <h3 style="color: aqua; margin-bottom: 2px;">Effects</h3>
+            <p>The effects are operated by pulsing specific lights in a specific order.
+            </p>
+        </div>
+    </div>
+
+    <br>
+    <button onclick="togglePopup('fixtures')">Fixtures</button>
+    <button onclick="togglePopup('lightGroups')">Groups</button>
+    <button onclick="togglePopup('colorsPopup')">Colors</button>
+    <button onclick="togglePopup('effects')">Effects</button>
+    <br><br>
+    <button onclick="togglePopup('help')">Help</button>
+    <br><br><br>
+    <input id="inp" type="text">
+</body>
+<script src="program.js"></script>
+
+</html>
